@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My LIFF App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(45deg, #06C755, #00B14F);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .content {
+            padding: 30px 20px;
+        }
+        
+        .user-info {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            background: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: #666;
+        }
+        
+        .user-name {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .user-id {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .btn {
+            background: #06C755;
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .btn:hover {
+            background: #05b04a;
+            transform: translateY(-2px);
+        }
+        
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-secondary {
+            background: #f1f3f4;
+            color: #333;
+        }
+        
+        .btn-secondary:hover {
+            background: #e8eaed;
+        }
+        
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e8f5e8;
+            border-radius: 10px;
+            color: #2d5a2d;
+            font-size: 14px;
+        }
+        
+        .error {
+            background: #ffe8e8;
+            color: #5a2d2d;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .feature-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+        }
+        
+        .feature-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .feature-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 My LIFF App</h1>
+            <p>Welcome to your LINE mini-app!</p>
+        </div>
+        
+        <div class="content">
+            <div class="user-info">
+                <div class="avatar" id="userAvatar">👤</div>
+                <div class="user-name" id="userName">Loading...</div>
+                <div class="user-id" id="userId">Getting user info...</div>
+            </div>
+            
+            <div class="buttons">
+                <button class="btn" id="sendMessageBtn" disabled>
+                    <span>💬</span>
+                    Send Message to Chat
+                </button>
+                
+                <button class="btn btn-secondary" id="shareBtn" disabled>
+                    <span>📤</span>
+                    Share App
+                </button>
+                
+                <button class="btn btn-secondary" id="closeBtn" disabled>
+                    <span>❌</span>
+                    Close LIFF
+                </button>
+            </div>
+            
+            <div class="feature-grid">
+                <div class="feature-card" onclick="showProfile()">
+                    <div class="feature-icon">👤</div>
+                    <div class="feature-title">Profile</div>
+                </div>
+                
+                <div class="feature-card" onclick="getContext()">
+                    <div class="feature-icon">📱</div>
+                    <div class="feature-title">Context</div>
+                </div>
+                
+                <div class="feature-card" onclick="scanQR()">
+                    <div class="feature-icon">📷</div>
+                    <div class="feature-title">QR Scan</div>
+                </div>
+                
+                <div class="feature-card" onclick="openBrowser()">
+                    <div class="feature-icon">🌐</div>
+                    <div class="feature-title">Browser</div>
+                </div>
+            </div>
+            
+            <div class="status" id="status" style="display: none;"></div>
+        </div>
+    </div>
+
+    <!-- LINE LIFF SDK -->
+    <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    
+    <script>
+        // Initialize LIFF
+        async function initializeLiff() {
+            try {
+                await liff.init({
+                    liffId: "2007984710-NaOrmDLE" // Replace with your actual LIFF ID
+                });
+                
+                if (!liff.isLoggedIn()) {
+                    liff.login();
+                    return;
+                }
+                
+                // Get user profile
+                const profile = await liff.getProfile();
+                updateUserInfo(profile);
+                
+                // Enable buttons
+                enableButtons();
+                
+                showStatus("LIFF initialized successfully!", false);
+                
+            } catch (error) {
+                console.error('LIFF initialization failed', error);
+                showStatus("Failed to initialize LIFF: " + error.message, true);
+            }
+        }
+        
+        function updateUserInfo(profile) {
+            document.getElementById('userName').textContent = profile.displayName;
+            document.getElementById('userId').textContent = `ID: ${profile.userId}`;
+            
+            if (profile.pictureUrl) {
+                const avatar = document.getElementById('userAvatar');
+                avatar.innerHTML = `<img src="${profile.pictureUrl}" alt="Avatar" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+            }
+        }
+        
+        function enableButtons() {
+            document.getElementById('sendMessageBtn').disabled = false;
+            document.getElementById('shareBtn').disabled = false;
+            document.getElementById('closeBtn').disabled = false;
+        }
+        
+        function showStatus(message, isError = false) {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = isError ? 'status error' : 'status';
+            status.style.display = 'block';
+            
+            setTimeout(() => {
+                status.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Button event handlers
+        document.getElementById('sendMessageBtn').addEventListener('click', async () => {
+            try {
+                if (!liff.isApiAvailable('sendMessages')) {
+                    showStatus('Send message API is not available', true);
+                    return;
+                }
+                
+                await liff.sendMessages([{
+                    type: 'text',
+                    text: 'Hello from LIFF app! 👋'
+                }]);
+                
+                showStatus('Message sent successfully!');
+            } catch (error) {
+                showStatus('Failed to send message: ' + error.message, true);
+            }
+        });
+        
+        document.getElementById('shareBtn').addEventListener('click', async () => {
+            try {
+                if (!liff.isApiAvailable('shareTargetPicker')) {
+                    showStatus('Share API is not available', true);
+                    return;
+                }
+                
+                await liff.shareTargetPicker([{
+                    type: 'text',
+                    text: 'Check out this awesome LIFF app! 🚀'
+                }]);
+                
+                showStatus('Shared successfully!');
+            } catch (error) {
+                showStatus('Failed to share: ' + error.message, true);
+            }
+        });
+        
+        document.getElementById('closeBtn').addEventListener('click', () => {
+            if (liff.isInClient()) {
+                liff.closeWindow();
+            } else {
+                showStatus('Close function only works within LINE app', true);
+            }
+        });
+        
+        // Feature functions
+        async function showProfile() {
+            try {
+                const profile = await liff.getProfile();
+                showStatus(`Profile: ${profile.displayName} (${profile.statusMessage || 'No status'})`);
+            } catch (error) {
+                showStatus('Failed to get profile: ' + error.message, true);
+            }
+        }
+        
+        function getContext() {
+            const context = liff.getContext();
+            showStatus(`Context: ${context.type}, Group ID: ${context.groupId || 'N/A'}, Room ID: ${context.roomId || 'N/A'}`);
+        }
+        
+        async function scanQR() {
+            try {
+                if (!liff.isApiAvailable('scanCodeV2')) {
+                    showStatus('QR scan API is not available', true);
+                    return;
+                }
+                
+                const result = await liff.scanCodeV2();
+                showStatus(`QR Code: ${result.value}`);
+            } catch (error) {
+                showStatus('QR scan cancelled or failed', true);
+            }
+        }
+        
+        function openBrowser() {
+            liff.openWindow({
+                url: 'https://line.me',
+                external: true
+            });
+        }
+        
+        // Initialize LIFF when page loads
+        window.addEventListener('load', initializeLiff);
+    </script>
+</body>
+</html>
