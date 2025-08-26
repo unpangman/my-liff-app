@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Complete LIFF App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+            color: #333;
+        }
+        
+        .app-container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            min-height: 90vh;
+        }
+        
+        .header {
+            background: linear-gradient(45deg, #06C755, #00B14F);
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        
+        .status-indicator {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ff4757;
+            transition: all 0.3s ease;
+        }
+        
+        .status-indicator.connected {
+            background: #2ed573;
+            box-shadow: 0 0 10px rgba(46, 213, 115, 0.5);
+        }
+        
+        .main-content {
+            padding: 25px 20px;
+        }
+        
+        /* User Profile Section */
+        .user-profile {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .user-profile:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            background: linear-gradient(45deg, #ddd, #ccc);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: #666;
+            overflow: hidden;
+            border: 3px solid white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .user-name {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .user-status {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .user-id {
+            font-size: 12px;
+            color: #999;
+            background: rgba(0,0,0,0.05);
+            padding: 5px 10px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+        
+        /* Action Buttons */
+        .action-buttons {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .btn {
+            background: #06C755;
+            color: white;
+            border: none;
+            padding: 16px 20px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn:hover:not(:disabled) {
+            background: #05b04a;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(6, 199, 85, 0.3);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .btn-secondary {
+            background: #f1f3f4;
+            color: #333;
+        }
+        
+        .btn-secondary:hover:not(:disabled) {
+            background: #e8eaed;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .btn-danger {
+            background: #ff4757;
+        }
+        
+        .btn-danger:hover:not(:disabled) {
+            background: #ff3838;
+            box-shadow: 0 10px 20px rgba(255, 71, 87, 0.3);
+        }
+        
+        /* Features Grid */
+        .features-section {
+            margin-bottom: 25px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .feature-card {
+            background: white;
+            border: 2px solid #f1f3f4;
+            border-radius: 12px;
+            padding: 20px 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .feature-card:hover {
+            border-color: #06C755;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(6, 199, 85, 0.15);
+        }
+        
+        .feature-icon {
+            font-size: 28px;
+            margin-bottom: 12px;
+            display: block;
+        }
+        
+        .feature-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        /* Message Form */
+        .message-form {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #06C755;
+            box-shadow: 0 0 0 3px rgba(6, 199, 85, 0.1);
+        }
+        
+        textarea.form-input {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        /* Status Messages */
+        .status-message {
+            margin-top: 20px;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+        
+        .status-message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status-message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .status-message.info {
+            background: #cce7ff;
+            color: #004085;
+            border: 1px solid #99d6ff;
+        }
+        
+        /* Loading Animation */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Device Info */
+        .device-info {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        
+        .info-row:last-child {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="status-indicator" id="connectionStatus"></div>
+            <h1>🚀 My LIFF App</h1>
+            <p>Complete HTML + JavaScript Example</p>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- User Profile Section -->
+            <div class="user-profile">
+                <div class="user-avatar" id="userAvatar">👤</div>
+                <div class="user-name" id="userName">Connecting...</div>
+                <div class="user-status" id="userStatus">Please wait...</div>
+                <div class="user-id" id="userId">Loading user info...</div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn" id="sendMessageBtn" disabled>
+                    <span>💬</span>
+                    <span>Send Message</span>
+                </button>
+                
+                <button class="btn btn-secondary" id="shareBtn" disabled>
+                    <span>📤</span>
+                    <span>Share App</span>
+                </button>
+                
+                <button class="btn btn-danger" id="closeBtn" disabled>
+                    <span>❌</span>
+                    <span>Close LIFF</span>
+                </button>
+            </div>
+            
+            <!-- Features Section -->
+            <div class="features-section">
+                <div class="section-title">
+                    <span>🛠️</span>
+                    <span>LIFF Features</span>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card" onclick="showProfile()">
+                        <span class="feature-icon">👤</span>
+                        <div class="feature-title">My Profile</div>
+                    </div>
+                    
+                    <div class="feature-card" onclick="getContext()">
+                        <span class="feature-icon">📱</span>
+                        <div class="feature-title">App Context</div>
+                    </div>
+                    
+                    <div class="feature-card" onclick="scanQRCode()">
+                        <span class="feature-icon">📷</span>
+                        <div class="feature-title">QR Scanner</div>
+                    </div>
+                    
+                    <div class="feature-card" onclick="openExternalBrowser()">
+                        <span class="feature-icon">🌐</span>
+                        <div class="feature-title">Open Browser</div>
+                    </div>
+                    
+                    <div class="feature-card" onclick="getOS()">
+                        <span class="feature-icon">📱</span>
+                        <div class="feature-title">Device Info</div>
+                    </div>
+                    
+                    <div class="feature-card" onclick="toggleDarkMode()">
+                        <span class="feature-icon">🌙</span>
+                        <div class="feature-title">Dark Mode</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Custom Message Form -->
+            <div class="message-form">
+                <div class="section-title">
+                    <span>✏️</span>
+                    <span>Send Custom Message</span>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="messageText">Message Text:</label>
+                    <textarea 
+                        class="form-input" 
+                        id="messageText" 
+                        placeholder="Enter your message here..."
+                        maxlength="1000"
+                    ></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="messageType">Message Type:</label>
+                    <select class="form-input" id="messageType">
+                        <option value="text">Text Message</option>
+                        <option value="sticker">Sticker Message</option>
+                        <option value="image">Image Message</option>
+                    </select>
+                </div>
+                
+                <button class="btn" id="sendCustomMessageBtn" disabled>
+                    <span>📨</span>
+                    <span>Send Custom Message</span>
+                </button>
+            </div>
+            
+            <!-- Status Messages -->
+            <div class="status-message" id="statusMessage"></div>
+            
+            <!-- Device Info (Hidden by default) -->
+            <div class="device-info" id="deviceInfo" style="display: none;">
+                <div class="section-title">
+                    <span>📊</span>
+                    <span>Device Information</span>
+                </div>
+                <div id="deviceDetails"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LINE LIFF SDK -->
+    <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    
+    <script>
+        // Global variables
+        let userProfile = null;
+        let liffContext = null;
+        
+        // Initialize LIFF when page loads
+        window.addEventListener('load', async () => {
+            console.log('Starting LIFF initialization...');
+            await initializeLiff();
+        });
+        
+        // LIFF Initialization
+        async function initializeLiff() {
+            try {
+                // Replace 'YOUR_LIFF_ID' with your actual LIFF ID from LINE Developers Console
+                await liff.init({
+                    liffId: "2007984710-NaOrmDLE" // ⚠️ REPLACE THIS WITH YOUR ACTUAL LIFF ID
+                });
+                
+                console.log('LIFF initialized successfully');
+                updateConnectionStatus(true);
+                
+                // Check if user is logged in
+                if (!liff.isLoggedIn()) {
+                    console.log('User not logged in, redirecting to login...');
+                    liff.login();
+                    return;
+                }
+                
+                // Get user profile and context
+                await loadUserData();
+                
+                // Enable all buttons
+                enableAllButtons();
+                
+                // Show success message
+                showStatusMessage('LIFF app initialized successfully! 🎉', 'success');
+                
+            } catch (error) {
+                console.error('LIFF initialization failed:', error);
+                updateConnectionStatus(false);
+                showStatusMessage(`Failed to initialize LIFF: ${error.message}`, 'error');
+            }
+        }
+        
+        // Load user data
+        async function loadUserData() {
+            try {
+                // Get user profile
+                userProfile = await liff.getProfile();
+                console.log('User profile loaded:', userProfile);
+                
+                // Get LIFF context
+                liffContext = liff.getContext();
+                console.log('LIFF context:', liffContext);
+                
+                // Update UI with user data
+                updateUserInterface();
+                
+            } catch (error) {
+                console.error('Failed to load user data:', error);
+                showStatusMessage('Failed to load user information', 'error');
+            }
+        }
+        
+        // Update user interface with profile data
+        function updateUserInterface() {
+            const userNameEl = document.getElementById('userName');
+            const userStatusEl = document.getElementById('userStatus');
+            const userIdEl = document.getElementById('userId');
+            const userAvatarEl = document.getElementById('userAvatar');
+            
+            if (userProfile) {
+                userNameEl.textContent = userProfile.displayName || 'Unknown User';
+                userStatusEl.textContent = userProfile.statusMessage || 'No status message';
+                userIdEl.textContent = `ID: ${userProfile.userId.substring(0, 20)}...`;
+                
+                // Update avatar
+                if (userProfile.pictureUrl) {
+                    userAvatarEl.innerHTML = `<img src="${userProfile.pictureUrl}" alt="User Avatar">`;
+                } else {
+                    userAvatarEl.innerHTML = '👤';
+                }
+            }
+        }
+        
+        // Update connection status indicator
+        function updateConnectionStatus(connected) {
+            const statusIndicator = document.getElementById('connectionStatus');
+            if (connected) {
+                statusIndicator.classList.add('connected');
+            } else {
+                statusIndicator.classList.remove('connected');
+            }
+        }
+        
+        // Enable all buttons
+        function enableAllButtons() {
+            const buttons = document.querySelectorAll('button[disabled]');
+            buttons.forEach(button => {
+                button.disabled = false;
+            });
+        }
+        
+        // Show status message
+        function showStatusMessage(message, type = 'info') {
+            const statusEl = document.getElementById('statusMessage');
+            statusEl.textContent = message;
+            statusEl.className = `status-message ${type}`;
+            statusEl.style.display = 'block';
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                statusEl.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Button Event Handlers
+        document.getElementById('sendMessageBtn').addEventListener('click', async () => {
+            try {
+                if (!liff.isApiAvailable('sendMessages')) {
+                    showStatusMessage('Send message API is not available in this context', 'error');
+                    return;
+                }
+                
+                const messages = [{
+                    type: 'text',
+                    text: `Hello! This message was sent from my LIFF app! 👋\n\nUser: ${userProfile?.displayName}\nTime: ${new Date().toLocaleString()}`
+                }];
+                
+                await liff.sendMessages(messages);
+                showStatusMessage('Message sent successfully! 📨', 'success');
+                
+            } catch (error) {
+                console.error('Failed to send message:', error);
+                showStatusMessage(`Failed to send message: ${error.message}`, 'error');
+            }
+        });
+        
+        document.getElementById('shareBtn').addEventListener('click', async () => {
+            try {
+                if (!liff.isApiAvailable('shareTargetPicker')) {
+                    showStatusMessage('Share API is not available in this context', 'error');
+                    return;
+                }
+                
+                const messages = [{
+                    type: 'text',
+                    text: `Check out this awesome LIFF app! 🚀\n\nTry it yourself: https://liff.line.me/YOUR_LIFF_ID`
+                }];
+                
+                await liff.shareTargetPicker(messages);
+                showStatusMessage('App shared successfully! 📤', 'success');
+                
+            } catch (error) {
+                console.error('Failed to share:', error);
+                if (error.message.includes('cancelled')) {
+                    showStatusMessage('Share cancelled by user', 'info');
+                } else {
+                    showStatusMessage(`Failed to share: ${error.message}`, 'error');
+                }
+            }
+        });
+        
+        document.getElementById('closeBtn').addEventListener('click', () => {
+            if (liff.isInClient()) {
+                liff.closeWindow();
+            } else {
+                showStatusMessage('Close function only works within the LINE app', 'error');
+                // Optional: redirect to LINE or show instructions
+                setTimeout(() => {
+                    window.location.href = 'https://line.me';
+                }, 2000);
+            }
+        });
+        
+        document.getElementById('sendCustomMessageBtn').addEventListener('click', async () => {
+            const messageText = document.getElementById('messageText').value.trim();
+            const messageType = document.getElementById('messageType').value;
+            
+            if (!messageText) {
+                showStatusMessage('Please enter a message', 'error');
+                return;
+            }
+            
+            try {
+                let messages = [];
+                
+                switch (messageType) {
+                    case 'text':
+                        messages = [{
+                            type: 'text',
+                            text: messageText
+                        }];
+                        break;
+                    
+                    case 'sticker':
+                        messages = [{
+                            type: 'sticker',
+                            packageId: '446',
+                            stickerId: '1988'
+                        }, {
+                            type: 'text',
+                            text: messageText
+                        }];
+                        break;
+                    
+                    case 'image':
+                        messages = [{
+                            type: 'text',
+                            text: `Image message: ${messageText}\n(Note: This is a demo - actual image URL would be needed for real image messages)`
+                        }];
+                        break;
+                }
+                
+                await liff.sendMessages(messages);
+                showStatusMessage('Custom message sent! ✅', 'success');
+                
+                // Clear the form
+                document.getElementById('messageText').value = '';
+                
+            } catch (error) {
+                console.error('Failed to send custom message:', error);
+                showStatusMessage(`Failed to send message: ${error.message}`, 'error');
+            }
+        });
+        
+        // Feature Functions
+        async function showProfile() {
+            if (!userProfile) {
+                showStatusMessage('User profile not available', 'error');
+                return;
+            }
+            
+            const profileInfo = `
+                👤 Profile Information:
+                
+                Name: ${userProfile.displayName}
+                Status: ${userProfile.statusMessage || 'No status'}
+                User ID: ${userProfile.userId}
+                Picture: ${userProfile.pictureUrl ? 'Available' : 'Not available'}
+            `;
+            
+            showStatusMessage(profileInfo, 'info');
+        }
+        
+        function getContext() {
+            if (!liffContext) {
+                showStatusMessage('LIFF context not available', 'error');
+                return;
+            }
+            
+            const contextInfo = `
+                📱 App Context:
+                
+                Type: ${liffContext.type || 'Unknown'}
+                View Type: ${liffContext.viewType || 'Unknown'}
+                User ID: ${liffContext.userId || 'Not available'}
+                UTM Source: ${liffContext.utmSource || 'Not available'}
+                Group ID: ${liffContext.groupId || 'Not in group'}
+                Room ID: ${liffContext.roomId || 'Not in room'}
+            `;
+            
+            showStatusMessage(contextInfo, 'info');
+        }
+        
+        async function scanQRCode() {
+            try {
+                if (!liff.isApiAvailable('scanCodeV2')) {
+                    showStatusMessage('QR code scanning is not available in this context', 'error');
+                    return;
+                }
+                
+                showStatusMessage('Opening QR code scanner...', 'info');
+                const result = await liff.scanCodeV2();
+                
+                showStatusMessage(`QR Code Result: ${result.value}`, 'success');
+                
+            } catch (error) {
+                console.error('QR scan error:', error);
+                if (error.message.includes('cancelled')) {
+                    showStatusMessage('QR code scanning was cancelled', 'info');
+                } else {
+                    showStatusMessage(`QR scan failed: ${error.message}`, 'error');
+                }
+            }
+        }
+        
+        function openExternalBrowser() {
+            try {
+                liff.openWindow({
+                    url: 'https://developers.line.biz/en/docs/liff/',
+                    external: true
+                });
+                
+                showStatusMessage('Opening external browser...', 'info');
+                
+            } catch (error) {
+                console.error('Failed to open browser:', error);
+                showStatusMessage(`Failed to open browser: ${error.message}`, 'error');
+            }
+        }
+        
+        function getOS() {
+            const os = liff.getOS();
+            const version = liff.getVersion();
+            const language = liff.getLanguage();
+            const isInClient = liff.isInClient();
+            const isLoggedIn = liff.isLoggedIn();
+            
+            const deviceDetailsEl = document.getElementById('deviceDetails');
+            deviceDetailsEl.innerHTML = `
+                <div class="info-row">
+                    <span><strong>OS:</strong></span>
+                    <span>${os}</span>
+                </div>
+                <div class="info-row">
+                    <span><strong>LIFF Version:</strong></span>
+                    <span>${version}</span>
+                </div>
+                <div class="info-row">
+                    <span><strong>Language:</strong></span>
+                    <span>${language}</span>
+                </div>
+                <div class="info-row">
+                    <span><strong>In LINE Client:</strong></span>
+                    <span>${isInClient ? 'Yes' : 'No'}</span>
+                </div>
+                <div class="info-row">
+                    <span><strong>Logged In:</strong></span>
+                    <span>${isLoggedIn ? 'Yes' : 'No'}</span>
+                </div>
+                <div class="info-row">
+                    <span><strong>Screen Size:</strong></span>
+                    <span>${window.innerWidth}x${window.innerHeight}</span>
+                </div>
+            `;
+            
+            const deviceInfoEl = document.getElementById('deviceInfo');
+            deviceInfoEl.style.display = deviceInfoEl.style.display === 'none' ? 'block' : 'none';
+        }
+        
+        function toggleDarkMode() {
+            document.body.style.filter = document.body.style.filter === 'invert(1) hue-rotate(180deg)' 
+                ? '' 
+                : 'invert(1) hue-rotate(180deg)';
+            
+            showStatusMessage('Dark mode toggled! 🌙', 'info');
+        }
+        
+        // Utility function to handle errors gracefully
+        window.addEventListener('error', (event) => {
+            console.error('Global error:', event.error);
+            showStatusMessage('An unexpected error occurred', 'error');
+        });
+        
+        // Handle page visibility changes
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') {
+                console.log('Page became visible');
+            } else {
+                console.log('Page became hidden');
+            }
+        });
+    </script>
+</body>
+</html>
