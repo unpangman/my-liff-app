@@ -21,7 +21,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { Calendar, Clock, Building2, User, DoorOpen } from "lucide-react";
 
-const LIFF_ID = import.meta.env.VITE_LIFF_ID || "REPLACE_WITH_YOUR_LIFF_ID";
+const LIFF_ID = import.meta.env.VITE_LIFF_ID || "2007984710-yGL8EkbY";
 const WEBHOOK_URL = import.meta.env.VITE_WEBHOOK_URL || ""; // e.g., your Google Apps Script endpoint
 
 function useLiff() {
